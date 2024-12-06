@@ -13,7 +13,7 @@ import { PhoneOTPVerification } from "./components/PhoneOTPVerification";
 
 export default function Home() {
   const { data: session } = useSession();
-  const { apiKey, setApiKey, buildType, setBuildType } = useAppContext();
+  const { buildType, setBuildType } = useAppContext();
   const {
     isLoggedIn,
     authenticate,
@@ -39,6 +39,7 @@ export default function Home() {
     setTheme,
     getTheme,
   } = useOkto() as OktoContextType;
+  //@ts-expect-error
   const idToken = useMemo(() => (session ? session.id_token : null), [session]);
 
   async function handleAuthenticate(): Promise<any> {
@@ -86,15 +87,6 @@ export default function Home() {
       </div>
 
       <div className="space-y-6 w-full max-w-lg">
-        <div className="space-y-4">
-          <label className="text-black font-semibold">API Key:</label>
-          <input
-            type="text"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            className="w-full px-4 py-2 rounded bg-gray-200 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
         <div className="space-y-4">
           <label className="text-black font-semibold">Build Type:</label>
           <select

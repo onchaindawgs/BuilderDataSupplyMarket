@@ -3,6 +3,7 @@ import React, { createContext, useState } from "react";
 import { useContext } from "react";
 import { OktoProvider, BuildType } from "okto-sdk-react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Navbar from "@/components/Navbar";
 
 // Create a context with a default value
 export const AppContext = createContext();
@@ -23,6 +24,7 @@ export const AppContextProvider = ({ children }) => {
   return (
     <AppContext.Provider value={{ apiKey, setApiKey, buildType, setBuildType }}>
       <OktoProvider apiKey={apiKey} buildType={buildType} gAuthCb={handleGAuthCb}>
+        <Navbar />
         {children}
       </OktoProvider>
     </AppContext.Provider>
