@@ -30,11 +30,11 @@ export default function Navbar() {
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         <div className="text-xl font-bold">
           <Link href="/">
-            Hacka<span className='font-extralight'>TON</span>
+            BDSM
           </Link>
         </div>
         <div className="flex items-center space-x-4">
-          <Link href="/hackatons" className="hover:text-gray-300">Hackatons</Link>
+          <Link href="/find-a-match" className="hover:text-gray-300">Find a match</Link>
           <Link href="/profile" className="hover:text-gray-300">Profile</Link>
           {!isLoggedIn ? <Button onClick={() => showOnboardingModal()}>Signin</Button> : <Button onClick={() => showWidgetModal()}>Logged In </Button>}
         </div>
