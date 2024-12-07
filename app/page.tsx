@@ -33,23 +33,43 @@ export const Home = () => {
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        wallet: "",
-        linkedin: "",
-        github: "",
+        linkedinUsername: "",
+        githubUsername: "",
         name: "",
         email: "",
     });
+    
+    const [userProfileError, setUserProfileError] = useState(false); // State to track errors
 
-    const steps = ["Connect Wallet", "LinkedIn", "GitHub", "Additional Info"];
+    const steps = ["LinkedIn", "GitHub", "Additional Info"];
+
+    const [processing, setProcessing] = useState({
+        linkedin: false,
+        github: false,
+    });
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            const getUser = async () => {
+                try {
+                    const _user = await GetUserProfile(walletAddr, readContractData);
+                    // If successful, hide the create profile dialog
+                    setUserProfileError(false);
+                } catch (error) {
+                    // If error, show the create profile dialog
+                    setUserProfileError(true);
+                }
+            };
+
+            getUser();
+        }
+    }, [isLoggedIn]);
 
     useEffect(() => {
         const fetchWalletAddress = async () => {
-            console.log("fwtching wallet")
             try {
-                console.log("try")
                 const wallets = await getWallets();
-                console.log("all wallets", wallets)
-                setWalletAddr(wallets?.wallets?.[0]?.address || "");
+                setWalletAddr(wallets?.wallets?.[1]?.address || "");
             } catch (error) {
                 console.error("Failed to fetch wallet address:", error);
             }
@@ -60,21 +80,37 @@ export const Home = () => {
     const isStepValid = () => {
         switch (currentStep) {
             case 0:
-                return formData.wallet.trim() !== "";
+                return formData.linkedinUsername.trim() !== "";
             case 1:
-                return formData.linkedin.trim() !== "";
+                return formData.githubUsername.trim() !== "";
             case 2:
-                return formData.github.trim() !== "";
-            case 3:
                 return formData.name.trim() !== "" && formData.email.trim() !== "";
             default:
                 return false;
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (isStepValid()) {
-            setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+            setLoading(true);
+            try {
+                if (currentStep === 0) {
+                    const success = await processLinkedInProfile(formData.linkedinUsername);
+                    if (!success) {
+                        alert("Failed to process LinkedIn profile");
+                        return;
+                    }
+                } else if (currentStep === 1) {
+                    const success = await processGitHubProfile(formData.githubUsername);
+                    if (!success) {
+                        alert("Failed to process GitHub profile");
+                        return;
+                    }
+                }
+                setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+            } finally {
+                setLoading(false);
+            }
         } else {
             alert(`Please complete the ${steps[currentStep]} step`);
         }
@@ -94,7 +130,7 @@ export const Home = () => {
             setLoading(true);
             try {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
-                console.log("Profile created:", formData);
+                console.log("Creating final profile with:", formData);
                 alert("Hacker Profile Created Successfully!");
             } catch (error) {
                 console.error("Profile creation failed", error);
@@ -105,12 +141,32 @@ export const Home = () => {
         }
     };
 
-    const connectLinkedIn = () => {
-        setFormData((prev) => ({ ...prev, linkedin: "Connected" }));
+    const processLinkedInProfile = async (username: string) => {
+        setProcessing(prev => ({ ...prev, linkedin: true }));
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            console.log("Processing LinkedIn:", username);
+            return true;
+        } catch (error) {
+            console.error("LinkedIn processing failed:", error);
+            return false;
+        } finally {
+            setProcessing(prev => ({ ...prev, github: false }));
+        }
     };
 
-    const connectGitHub = () => {
-        setFormData((prev) => ({ ...prev, github: "Connected" }));
+    const processGitHubProfile = async (username: string) => {
+        setProcessing(prev => ({ ...prev, github: true }));
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            console.log("Processing GitHub:", username);
+            return true;
+        } catch (error) {
+            console.error("GitHub processing failed:", error);
+            return false;
+        } finally {
+            setProcessing(prev => ({ ...prev, github: false }));
+        }
     };
 
     return (
@@ -118,18 +174,10 @@ export const Home = () => {
             <h2 className="relative flex-col md:flex-row z-10 text-3xl md:text-6xl md:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-white to-white flex items-center gap-2 md:gap-8">
                 <span>Builder Data</span>
                 <span className="text-white text-lg font-thin">x</span>
-                <span>Supply Model</span>
+                <span>Supply Market</span>
             </h2>
-            <HoverBorderGradient
-                containerClassName="rounded-full"
-                as="button"
-                onClick={() => GetUserProfile(walletAddr, readContractData)}
-                className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
-            >
-                <span>Get Profile</span>
-            </HoverBorderGradient>
 
-            {isLoggedIn && (
+            {isLoggedIn && userProfileError && (
                 <Dialog>
                     <DialogTrigger>
                         <div className="m-10 flex justify-center text-center">
@@ -163,8 +211,8 @@ export const Home = () => {
                                             <div
                                                 key={step}
                                                 className={`text-sm font-medium ${index <= currentStep
-                                                        ? "text-primary"
-                                                        : "text-muted-foreground"
+                                                    ? "text-primary"
+                                                    : "text-muted-foreground"
                                                     }`}
                                             >
                                                 {step}
@@ -184,13 +232,14 @@ export const Home = () => {
                                 {currentStep === 0 && (
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <Label htmlFor="wallet">Wallet Address</Label>
+                                            <Label htmlFor="linkedinUsername">LinkedIn Username</Label>
                                             <Input
-                                                id="wallet"
-                                                name="wallet"
-                                                placeholder="Enter your wallet address"
-                                                value={formData.wallet}
+                                                id="linkedinUsername"
+                                                name="linkedinUsername"
+                                                placeholder="johndoe"
+                                                value={formData.linkedinUsername}
                                                 onChange={handleInputChange}
+                                                disabled={processing.linkedin}
                                             />
                                         </div>
                                     </div>
@@ -198,31 +247,21 @@ export const Home = () => {
 
                                 {currentStep === 1 && (
                                     <div className="space-y-4">
-                                        <Button
-                                            className="w-full"
-                                            variant="outline"
-                                            onClick={connectLinkedIn}
-                                        >
-                                            <Linkedin className="mr-2 h-4 w-4" />
-                                            {formData.linkedin ? "LinkedIn Connected" : "Connect LinkedIn"}
-                                        </Button>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="githubUsername">GitHub Username</Label>
+                                            <Input
+                                                id="githubUsername"
+                                                name="githubUsername"
+                                                placeholder="johndoe"
+                                                value={formData.githubUsername}
+                                                onChange={handleInputChange}
+                                                disabled={processing.github}
+                                            />
+                                        </div>
                                     </div>
                                 )}
 
                                 {currentStep === 2 && (
-                                    <div className="space-y-4">
-                                        <Button
-                                            className="w-full"
-                                            variant="outline"
-                                            onClick={connectGitHub}
-                                        >
-                                            <Github className="mr-2 h-4 w-4" />
-                                            {formData.github ? "GitHub Connected" : "Connect GitHub"}
-                                        </Button>
-                                    </div>
-                                )}
-
-                                {currentStep === 3 && (
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <Label htmlFor="name">Full Name</Label>
@@ -250,14 +289,14 @@ export const Home = () => {
                             </CardContent>
                             <CardFooter className="flex justify-between">
                                 {currentStep > 0 && (
-                                    <Button onClick={handlePrevious}>Previous</Button>
+                                    <Button onClick={handlePrevious} disabled={loading}>Previous</Button>
                                 )}
                                 {currentStep < steps.length - 1 ? (
                                     <Button
                                         onClick={handleNext}
-                                        disabled={!isStepValid()}
+                                        disabled={loading || !isStepValid() || processing.linkedin || processing.github}
                                     >
-                                        Next
+                                        {loading ? "Processing..." : "Next"}
                                     </Button>
                                 ) : (
                                     <Button
