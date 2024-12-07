@@ -10,6 +10,7 @@ import AuthButton from "./components/AuthButton";
 import SendRawTransaction from "./components/SendRawTransaction";
 import { EmailOTPVerification } from "./components/EmailOTPVerification";
 import { PhoneOTPVerification } from "./components/PhoneOTPVerification";
+import { fetchLinkedin } from "@/utils/FetchLinkedin";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -73,6 +74,11 @@ export default function Home() {
       console.log("Okto is authenticated");
     }
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    console.log("home page clg fxn run")
+    fetchLinkedin("adipundir")
+  },[])
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-6 p-12 bg-violet-200">
