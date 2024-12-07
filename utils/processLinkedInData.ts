@@ -1,13 +1,13 @@
-interface DeveloperPersona {
+interface processedLinkedInData {
   name: string;
   location: string;
   expertise: string[];
   technologies: string[];
   experience: number;
-  languages: string[];
+  spokenLanguages: string[];
 }
 
-function extractDeveloperPersona(profileData: any): DeveloperPersona {
+function extractprocessedLinkedInData(profileData: any): processedLinkedInData {
   // Comprehensive list of technology keywords across different domains
   const keyTechnologies = [
     // Programming Languages
@@ -73,6 +73,6 @@ function extractDeveloperPersona(profileData: any): DeveloperPersona {
     expertise: extractExpertise(profile.about),
     technologies: extractExpertise(profile.about),
     experience: calculateExperience(profile.experience),
-    languages: profile.languages.map((lang: { name: string }) => lang.name)
+    spokenLanguages: profile.languages.map((lang: { name: string }) => lang.name)
   };
 }
