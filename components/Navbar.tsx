@@ -28,12 +28,12 @@ export default function Navbar() {
   return (
     <nav className={`fixed w-full z-[100] transition-colors duration-300 ${navBackground}`}>
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
-        <div className="text-xl font-bold">
+        <div className="text-xl text-white font-bold">
           <Link href="/">
             BDSM
           </Link>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 text-white">
           <Link href="/find-a-match" className="hover:text-gray-300">Find a match</Link>
           <Link href="/profile" className="hover:text-gray-300">Profile</Link>
           {!isLoggedIn ? <Button onClick={() => showOnboardingModal()}>Signin</Button> : <Button onClick={() => showWidgetModal()}>Logged In </Button>}
