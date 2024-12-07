@@ -1,31 +1,39 @@
-"use client";
 import React from "react";
-import { BackgroundGradient } from "./background-gradient";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
-type CardProps = {
+interface UserCardProps {
     name: string;
-    description: string;
-    prizePool: string;
-};
+    bio: string;
+    aiReview: string;
+    compatibilityScore: number;
+    devScore: number;
+}
 
-export default function UserCard({ name, bio, aiReview, compatibility, devScore  }: CardProps) {
+export function UserCard({ name, bio, aiReview, compatibilityScore, devScore }: UserCardProps) {
     return (
-        <div>
-            <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900">
-                <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200">
-                    {name}
-                </p>
-
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {description}
-                </p>
-                <button className="rounded-full pl-4 pr-1 py-1 text-white flex items-center space-x-1 bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
-                    <span>Apply Now </span>
-                    <span className="bg-zinc-700 rounded-full text-[0.6rem] px-2 py-0 text-white">
-                        ${prizePool}
-                    </span>
-                </button>
-            </BackgroundGradient>
-        </div>
+        <Card className="w-full max-w-md">
+            <CardHeader className="flex flex-row items-center gap-4">
+                <Avatar className="w-16 h-16">
+                    <AvatarImage src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${name}`} />
+                    <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <h3 className="text-2xl font-bold">{name}</h3>
+                    <p className="text-sm text-muted-foreground">{bio}</p>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-2">
+                    <p className="text-sm">{aiReview}</p>
+                    <div className="flex justify-between">
+                        <Badge variant="secondary">Compatibility: {compatibilityScore}%</Badge>
+                        <Badge variant="secondary">Dev Score: {devScore}/100</Badge>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
     );
 }
+
