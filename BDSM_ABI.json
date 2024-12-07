@@ -1,5 +1,5 @@
 {
-	"abi" : [
+	"abi": [
 		{
 			"inputs": [
 				{
@@ -9,6 +9,29 @@
 				}
 			],
 			"name": "createUser",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user1",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "user2",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "compatibility",
+					"type": "uint256"
+				}
+			],
+			"name": "editMatch",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -137,6 +160,35 @@
 					"internalType": "address",
 					"name": "",
 					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"name": "matches",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "fellowBuilder",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "compatibility",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
 				}
 			],
 			"name": "users",
@@ -188,4 +240,4 @@
 			"type": "function"
 		}
 	]
-} 
+}
