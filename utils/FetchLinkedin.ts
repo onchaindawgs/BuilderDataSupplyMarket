@@ -13,10 +13,12 @@ export default async function fetchLinkedin(profile_id: string) {
     };
 
     const response = await axios.get(url, { params });
-    if (response.status === 200) {
-      return response.data;
-    }
-    throw new Error(`Request failed with status code: ${response.status}`);
+    if (response.status !== 200)
+      throw new Error(`Request failed with status code: ${response.status}`);
+
+    const FInalData = extractprocessedLinkedInData(response);
+    console.log("structured Data", FInalData);
+    return FInalData;
   } catch (error) {
     console.error("Error fetching LinkedIn data:", error);
     throw error;

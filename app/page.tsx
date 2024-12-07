@@ -27,8 +27,9 @@ import { OktoContextType, useOkto } from "okto-sdk-react";
 import { GetUserProfile } from "@/readContract/getUserProfile";
 import { GetAllUsers } from "@/readContract/getAllUsers";
 import { GetUsersCount } from "@/readContract/getUsersCount";
-import fetchLinkedin from "@/utils/fetchLinkedin";
+import fetchLinkedin from "@/utils/FetchLinkedin";
 import fetchGithub from "@/utils/fetchGithub";
+import { GenerateDevScore } from "@/utils/GenerateDevScore";
 export const Home = () => {
     const { isLoggedIn, getWallets, readContractData, executeRawTransaction } = useOkto() as OktoContextType;
 
@@ -148,6 +149,8 @@ export const Home = () => {
                 console.log("Creating final profile with:", finalProfile);
                 // TODO: Send finalProfile to your backend/contract
                 alert("Hacker Profile Created Successfully!");
+                const devScore = await GenerateDevScore(`{github : githubData, linkedin : linkedinData}`)
+                console.log("Developer Score is", devScore);
             } catch (error) {
                 console.error("Profile creation failed", error);
                 alert("Failed to create profile");
