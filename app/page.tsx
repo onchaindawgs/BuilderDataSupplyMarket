@@ -30,6 +30,7 @@ import { GetUsersCount } from "@/readContract/getUsersCount";
 import fetchLinkedin from "@/utils/fetchLinkedin";
 import fetchGithub from "@/utils/fetchGithub";
 import { EmlUploader } from "@/components/EmlUploader";
+import { uploadBlob } from "@/utils/uploadBlob";
 
 export const Home = () => {
     const { isLoggedIn, getWallets, readContractData, executeRawTransaction } = useOkto() as OktoContextType;
@@ -141,15 +142,34 @@ export const Home = () => {
         if (currentStep === steps.length - 1 && isStepValid()) {
             setLoading(true);
             try {
-                // Now we can use both linkedinData and githubData here
+                // Create the final profile object
                 const finalProfile = {
                     ...formData,
                     linkedinProfile: linkedinData,
                     githubProfile: githubData
                 };
-                console.log("Creating final profile with:", finalProfile);
-                // TODO: Send finalProfile to your backend/contract
-                alert("Hacker Profile Created Successfully!");
+
+                // Convert the profile data to a Blob/File
+                const profileBlob = new File(
+                    [JSON.stringify(finalProfile)],
+                    'profile.json',
+                    { type: 'application/json' }
+                );
+
+                // Upload to Walrus
+                const walrusResponse = await uploadBlob(profileBlob);
+                console.log("Profile data stored on Walrus:", walrusResponse);
+
+                // Add the Walrus reference to the profile data
+                const profileWithRef = {
+                    ...finalProfile,
+                    walrusRef: walrusResponse.blobId,
+                    walrusSuiRef: walrusResponse.suiRef
+                };
+
+                console.log("Creating final profile with:", profileWithRef);
+                // TODO: Send profileWithRef to your backend/contract
+                alert("Builder Profile Created Successfully!");
             } catch (error) {
                 console.error("Profile creation failed", error);
                 alert("Failed to create profile");
