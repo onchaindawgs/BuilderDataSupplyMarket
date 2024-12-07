@@ -33,7 +33,7 @@ interface UploadResponse {
 
 export async function uploadBlob(
   file: File,
-  epochs: number = 1,
+  epochs: number = 200,
   publisherUrl: string = "https://publisher.walrus-testnet.walrus.space",
   aggregatorUrl: string = "https://aggregator.walrus-testnet.walrus.space"
 ): Promise<UploadResponse> {
