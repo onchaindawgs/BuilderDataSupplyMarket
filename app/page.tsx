@@ -30,7 +30,7 @@ import { GetUsersCount } from "@/readContract/getUsersCount";
 import fetchLinkedin from "@/utils/fetchLinkedin";
 import fetchGithub from "@/utils/fetchGithub";
 export const Home = () => {
-    const { isLoggedIn, getWallets, readContractData } = useOkto() as OktoContextType;
+    const { isLoggedIn, getWallets, readContractData, executeRawTransaction } = useOkto() as OktoContextType;
 
     const [walletAddr, setWalletAddr] = useState<string>("");
     const [currentStep, setCurrentStep] = useState(0);

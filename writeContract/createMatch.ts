@@ -2,13 +2,13 @@
 import { ethers } from "ethers";
 import { abi } from "@/BDSM_ABI.json";
 
-export const UpdateUserProfile = async (
+export const CreateMatch = async (
   userAddress: string,
   _dataHash: string,
   executeRawTransaction: any
 ) => {
   const iface = new ethers.Interface(abi);
-  const dataHash = iface.encodeFunctionData("updateUserProfile", [_dataHash]);
+  const dataHash = iface.encodeFunctionData("createMatch", [_dataHash]);
   
   const networkName = "POLYGON_TESTNET_AMOY";
 
