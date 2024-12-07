@@ -1,5 +1,18 @@
 [
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dataHash",
+				"type": "string"
+			}
+		],
+		"name": "createUser",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -12,7 +25,7 @@
 				"type": "string"
 			}
 		],
-		"name": "createUser",
+		"name": "updateUserProfile",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -115,19 +128,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_dataHash",
-				"type": "string"
-			}
-		],
-		"name": "updateUserProfile",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
