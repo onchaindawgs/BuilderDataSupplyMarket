@@ -27,13 +27,16 @@ import { OktoContextType, useOkto } from "okto-sdk-react";
 import { GetUserProfile } from "@/readContract/getUserProfile";
 import { GetAllUsers } from "@/readContract/getAllUsers";
 import { GetUsersCount } from "@/readContract/getUsersCount";
-
+import fetchLinkedin from "@/utils/fetchLinkedin";
+import fetchGithub from "@/utils/fetchGithub";
 export const Home = () => {
     const { isLoggedIn, getWallets, readContractData } = useOkto() as OktoContextType;
 
     const [walletAddr, setWalletAddr] = useState<string>("");
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [linkedinData, setLinkedinData] = useState<any>(null);
+    const [githubData, setGithubData] = useState<any>(null);
     const [formData, setFormData] = useState({
         linkedinUsername: "",
         githubUsername: "",
@@ -65,7 +68,7 @@ export const Home = () => {
 
             getUser();
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, walletAddr]);
 
     useEffect(() => {
         const fetchWalletAddress = async () => {
@@ -97,19 +100,24 @@ export const Home = () => {
             setLoading(true);
             try {
                 if (currentStep === 0) {
-                    const success = await processLinkedInProfile(formData.linkedinUsername);
-                    if (!success) {
+                    const linkedInResponse = await fetchLinkedin(formData.linkedinUsername);
+                    setLinkedinData(linkedInResponse);
+                    if (!linkedInResponse) {
                         alert("Failed to process LinkedIn profile");
                         return;
                     }
                 } else if (currentStep === 1) {
-                    const success = await processGitHubProfile(formData.githubUsername);
-                    if (!success) {
+                    const githubResponse = await fetchGithub(formData.githubUsername);
+                    setGithubData(githubResponse);
+                    if (!githubResponse) {
                         alert("Failed to process GitHub profile");
                         return;
                     }
                 }
                 setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+            } catch (error) {
+                console.error("Error processing profile:", error);
+                alert("Failed to process profile. Please try again.");
             } finally {
                 setLoading(false);
             }
@@ -131,8 +139,14 @@ export const Home = () => {
         if (currentStep === steps.length - 1 && isStepValid()) {
             setLoading(true);
             try {
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                console.log("Creating final profile with:", formData);
+                // Now we can use both linkedinData and githubData here
+                const finalProfile = {
+                    ...formData,
+                    linkedinProfile: linkedinData,
+                    githubProfile: githubData
+                };
+                console.log("Creating final profile with:", finalProfile);
+                // TODO: Send finalProfile to your backend/contract
                 alert("Hacker Profile Created Successfully!");
             } catch (error) {
                 console.error("Profile creation failed", error);
@@ -143,39 +157,11 @@ export const Home = () => {
         }
     };
 
-    const processLinkedInProfile = async (username: string) => {
-        setProcessing(prev => ({ ...prev, linkedin: true }));
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log("Processing LinkedIn:", username);
-            return true;
-        } catch (error) {
-            console.error("LinkedIn processing failed:", error);
-            return false;
-        } finally {
-            setProcessing(prev => ({ ...prev, github: false }));
-        }
-    };
-
-    const processGitHubProfile = async (username: string) => {
-        setProcessing(prev => ({ ...prev, github: true }));
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log("Processing GitHub:", username);
-            return true;
-        } catch (error) {
-            console.error("GitHub processing failed:", error);
-            return false;
-        } finally {
-            setProcessing(prev => ({ ...prev, github: false }));
-        }
-    };
-
     return (
         <div className="h-[100vh] rounded-md bg-neutral-900 flex flex-col items-center justify-center relative w-full">
             <h2 className="relative flex-col md:flex-row z-10 text-3xl md:text-6xl md:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-white to-white flex items-center gap-2 md:gap-8">
                 <span>Builder Data</span>
-                <span className="text-white text-lg font-thin">x</span>
+                {/* <span className="text-white text-lg font-thin">x</span> */}
                 <span>Supply Market</span>
             </h2>
 
@@ -321,3 +307,5 @@ export const Home = () => {
 };
 
 export default Home;
+
+

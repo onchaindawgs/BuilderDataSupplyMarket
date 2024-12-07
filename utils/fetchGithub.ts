@@ -11,7 +11,7 @@ interface GithubData {
   };
 }
 
-export async function fetchGithubData(username: string): Promise<GithubData> {
+export default async function fetchGithubData(username: string): Promise<GithubData> {
   try {
     const [languagesResponse, activityResponse] = await Promise.all([
       axios.get(`/api/topLang?username=${username}`, { responseType: 'text' }),

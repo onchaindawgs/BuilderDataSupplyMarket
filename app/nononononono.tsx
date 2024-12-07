@@ -10,7 +10,7 @@ import AuthButton from "./components/AuthButton";
 import SendRawTransaction from "./components/SendRawTransaction";
 import { EmailOTPVerification } from "./components/EmailOTPVerification";
 import { PhoneOTPVerification } from "./components/PhoneOTPVerification";
-import { fetchLinkedin } from "@/utils/fetchLinkedIn";
+import { fetchLinkedin } from "@/utils/fetchLinkedin";
 
 export default function Home() {
   const { data: session } = useSession();
