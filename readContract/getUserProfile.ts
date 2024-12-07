@@ -3,7 +3,7 @@
 export const GetUserProfile = async (_addr: string, readContractData: any) => {
   console.log("wallet address", _addr);
   console.log("function run");
-
+  
   const resp = await readContractData("POLYGON_TESTNET_AMOY", {
     contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     abi: {

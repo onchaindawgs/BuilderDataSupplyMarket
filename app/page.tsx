@@ -25,6 +25,8 @@ import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import { OktoContextType, useOkto } from "okto-sdk-react";
 import { GetUserProfile } from "@/readContract/getUserProfile";
+import { GetAllUsers } from "@/readContract/getAllUsers";
+import { GetUsersCount } from "@/readContract/getUsersCount";
 
 export const Home = () => {
     const { isLoggedIn, getWallets, readContractData } = useOkto() as OktoContextType;
