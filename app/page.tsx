@@ -44,8 +44,11 @@ export const Home = () => {
 
     useEffect(() => {
         const fetchWalletAddress = async () => {
+            console.log("fwtching wallet")
             try {
+                console.log("try")
                 const wallets = await getWallets();
+                console.log("all wallets", wallets)
                 setWalletAddr(wallets?.wallets?.[0]?.address || "");
             } catch (error) {
                 console.error("Failed to fetch wallet address:", error);

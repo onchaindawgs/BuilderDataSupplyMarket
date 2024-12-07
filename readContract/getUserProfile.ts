@@ -17,21 +17,14 @@ export const GetUserProfile = async (_addr: string, readContractData: any) => {
       name: "getUser",
       outputs: [
         {
-          components: [
-            {
-              internalType: "address",
-              name: "addr",
-              type: "address",
-            },
-            {
-              internalType: "string",
-              name: "dataHash",
-              type: "string",
-            },
-          ],
-          internalType: "struct BuilderDataSupplyMarket.User",
-          name: "",
-          type: "tuple",
+          internalType: "address",
+          name: "addr",
+          type: "address",
+        },
+        {
+          internalType: "string",
+          name: "dataHash",
+          type: "string",
         },
       ],
       stateMutability: "view",
