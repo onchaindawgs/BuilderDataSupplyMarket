@@ -141,7 +141,7 @@ export const Home = () => {
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
-                            <DialogTitle>Create Hacker Profile</DialogTitle>
+                            <DialogTitle>Create Builder Profile</DialogTitle>
                             <DialogDescription>
                                 Fill out your details to generate a developer score
                             </DialogDescription>
