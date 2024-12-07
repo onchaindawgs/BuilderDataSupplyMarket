@@ -25,6 +25,8 @@ import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import { OktoContextType, useOkto } from "okto-sdk-react";
 import { GetUserProfile } from "@/readContract/getUserProfile";
+import { GetAllUsers } from "@/readContract/getAllUsers";
+import { GetUsersCount } from "@/readContract/getUsersCount";
 
 export const Home = () => {
     const { isLoggedIn, getWallets, readContractData } = useOkto() as OktoContextType;
@@ -127,6 +129,22 @@ export const Home = () => {
                 className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
             >
                 <span>Get Profile</span>
+            </HoverBorderGradient>
+            <HoverBorderGradient
+                containerClassName="rounded-full"
+                as="button"
+                onClick={() => GetAllUsers(readContractData)}
+                className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+                <span>Get All Users</span>
+            </HoverBorderGradient>
+            <HoverBorderGradient
+                containerClassName="rounded-full"
+                as="button"
+                onClick={() => GetUsersCount(readContractData)}
+                className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+                <span>Get Users count</span>
             </HoverBorderGradient>
 
             {isLoggedIn && (
