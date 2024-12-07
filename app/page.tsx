@@ -29,6 +29,8 @@ import { GetAllUsers } from "@/readContract/getAllUsers";
 import { GetUsersCount } from "@/readContract/getUsersCount";
 import fetchLinkedin from "@/utils/fetchLinkedin";
 import fetchGithub from "@/utils/fetchGithub";
+import { EmlUploader } from "@/components/EmlUploader";
+
 export const Home = () => {
     const { isLoggedIn, getWallets, readContractData, executeRawTransaction } = useOkto() as OktoContextType;
 
@@ -244,6 +246,17 @@ export const Home = () => {
                                                 value={formData.githubUsername}
                                                 onChange={handleInputChange}
                                                 disabled={processing.github}
+                                            />
+                                        </div>
+                                        
+                                        <div className="space-y-2">
+                                            <Label>Verify GitHub Ownership</Label>
+                                            <EmlUploader 
+                                                address={walletAddr} 
+                                                onVerificationSuccess={() => {
+                                                    // Handle successful verification
+                                                    setProcessing(prev => ({ ...prev, github: true }));
+                                                }}
                                             />
                                         </div>
                                     </div>
