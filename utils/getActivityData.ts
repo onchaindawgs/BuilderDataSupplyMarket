@@ -1,22 +1,12 @@
-function extractGitHubStats(svgContent: string): {
-  totalCommits: number;
-  totalPRs: number;
-  contributedTo: number;
-} {
-  const parser = new DOMParser();
-  const svgDoc = parser.parseFromString(svgContent, "image/svg+xml");
-
-  const totalCommitsText = svgDoc.querySelector('[data-testid="commits"]')?.textContent?.trim();
-  const totalPRsText = svgDoc.querySelector('[data-testid="prs"]')?.textContent?.trim();
-  const contributedToText = svgDoc.querySelector('[data-testid="contribs"]')?.textContent?.trim();
-
-  const totalCommits = totalCommitsText ? parseInt(totalCommitsText, 10) : 0;
-  const totalPRs = totalPRsText ? parseInt(totalPRsText, 10) : 0;
-  const contributedTo = contributedToText ? parseInt(contributedToText, 10) : 0;
+export default function getActivityData(svgContent: string) {
+  // Extract using regex since we're dealing with a string
+  const commitsMatch = svgContent.match(/data-testid="commits"[^>]*>(\d+)</);
+  const prsMatch = svgContent.match(/data-testid="prs"[^>]*>(\d+)</);
+  const contribsMatch = svgContent.match(/data-testid="contribs"[^>]*>(\d+)</);
 
   return {
-    totalCommits,
-    totalPRs,
-    contributedTo,
+    totalCommits: commitsMatch ? parseInt(commitsMatch[1]) : 0,
+    totalPRs: prsMatch ? parseInt(prsMatch[1]) : 0,
+    contributedTo: contribsMatch ? parseInt(contribsMatch[1]) : 0
   };
 }
