@@ -38,7 +38,7 @@ const getMatchesFromAPI = async () => {
 };
 
 export default function Home() {
-    const [matches, setMatches] = useState([]);
+    const [matches, setMatches] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleGetMatches = async () => {
