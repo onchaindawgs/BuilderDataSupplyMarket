@@ -1,22 +1,24 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server'
+import axios from 'axios'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { username } = req.query;
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const username = searchParams.get('username')
 
   if (!username) {
-    return res.status(400).json({ error: 'Username is required' });
+    return NextResponse.json({ error: 'Username is required' }, { status: 400 })
   }
 
   try {
-    const response = await fetch(`https://github-readme-stats.vercel.app/api/top-langs/?username=${username}`);
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data.message || 'Failed to fetch data' });
-    }
-
-    res.status(200).json(data);
+    const response = await axios.get(
+      `https://github-readme-stats.vercel.app/api/top-langs/?username=${username}`,
+      { responseType: 'text' }
+    )
+    return new NextResponse(response.data, {
+      headers: { 'Content-Type': 'text/plain' }
+    })
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error fetching GitHub stats:', error)
+    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 })
   }
 }

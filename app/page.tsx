@@ -12,6 +12,7 @@ import { EmailOTPVerification } from "./components/EmailOTPVerification";
 import { PhoneOTPVerification } from "./components/PhoneOTPVerification";
 import { fetchLinkedin } from "@/utils/FetchLinkedin";
 
+
 export default function Home() {
   const { data: session } = useSession();
   const { buildType, setBuildType } = useAppContext();

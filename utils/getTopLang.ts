@@ -1,17 +1,26 @@
 export default function getTopLanguages(svgContent: string): { [key: string]: number } {
-  const parser = new DOMParser();
-  const svgDoc = parser.parseFromString(svgContent, "image/svg+xml");
+  // Create a temporary div to parse the SVG string
+  const div = document.createElement('div');
+  div.innerHTML = svgContent;
 
-  const languageElements = svgDoc.querySelectorAll('[data-testid="lang-items"] g');
   const languages: { [key: string]: number } = {};
 
-  languageElements.forEach((langElement) => {
-    const langName = langElement.querySelector('[data-testid="lang-name"]')?.textContent?.trim();
-    const percentageText = langElement.querySelector('.lang-name:last-child')?.textContent?.trim();
+  // Find all language groups
+  const langGroups = div.querySelectorAll('[data-testid="lang-items"] > g > g');
+  
+  langGroups.forEach((group) => {
+    // Get language name
+    const langNameElement = group.querySelector('[data-testid="lang-name"]');
+    const langName = langNameElement?.textContent?.trim();
 
+    // Get percentage (it's in the second text element with class 'lang-name')
+    const percentageElement = group.querySelectorAll('.lang-name')[1];
+    const percentageText = percentageElement?.textContent?.trim();
+    
     if (langName && percentageText) {
-      const percentageValue = parseFloat(percentageText.replace('%', ''));
-      languages[langName] = percentageValue;
+      // Convert percentage string to number (remove the % symbol)
+      const percentage = parseFloat(percentageText.replace('%', ''));
+      languages[langName] = percentage;
     }
   });
 
