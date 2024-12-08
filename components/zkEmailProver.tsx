@@ -47,8 +47,8 @@ export const EmlUploader: React.FC<EmlUploaderProps> = ({ address, onVerificatio
                 value: address,
             }];
 
-            const proof = await prover.generateProof(fileContent, externalInputs);
-            const proofData = proof.getProofData();
+            // const proof = await prover.generateProof(fileContent, externalInputs);
+            // const proofData = proof.getProofData();
 
             setUploadStatus('Verification successful!');
             onVerificationSuccess();

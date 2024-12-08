@@ -18,7 +18,7 @@ export const GenerateDevScore = async (jsonObject: any) => {
 
     // Prepare the prompt
     const prompt = `
-      Analyze the following developer data:
+      Analyze the following developer's data:
       ${JSON.stringify(jsonObject)}
 
       Based on their contributions, projects, activity, and skills, assign a developer score out of 1000 that reflects:

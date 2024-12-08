@@ -3,7 +3,7 @@ import getTopLanguages from './getTopLang'
 import getActivityData from './getActivityData'
 
 interface GithubData {
-  languages: { [key: string]: number };
+  topLanguages: { [key: string]: number };
   activity: {
     totalCommits: number;
     totalPRs: number;
@@ -18,8 +18,13 @@ export default async function fetchGithubData(username: string): Promise<GithubD
       axios.get(`/api/activityData?username=${username}`, { responseType: 'text' })
     ]);
 
+    console.log({
+      topLanguages: getTopLanguages(languagesResponse.data),
+      activity: getActivityData(activityResponse.data),
+    });
+
     return {
-      languages: getTopLanguages(languagesResponse.data),
+      topLanguages: getTopLanguages(languagesResponse.data),
       activity: getActivityData(activityResponse.data)
     };
   } catch (error) {

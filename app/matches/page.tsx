@@ -54,8 +54,8 @@ export default function Home() {
     };
 
     return (
-        <div className="container mx-auto py-8">
-            <h1 className="text-4xl font-bold mb-8 text-center">Developer Matches</h1>
+        <div className="container min-h-[100vh] mx-auto py-8">
+            <h1 className="container text-4xl font-bold mb-8 text-center">Developer Matches</h1>
             {matches.length === 0 ? (
                 <div className="text-center">
                     <p className="text-xl mb-4">No matches to show</p>

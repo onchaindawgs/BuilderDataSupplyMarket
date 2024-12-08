@@ -29,14 +29,16 @@ import { GetAllUsers } from "@/readContract/getAllUsers";
 import { GetUsersCount } from "@/readContract/getUsersCount";
 import fetchLinkedin from "@/utils/FetchLinkedin";
 import fetchGithub from "@/utils/fetchGithub";
-import { EmlUploader } from "@/components/EmlUploader";
 import { uploadBlob } from "@/utils/uploadBlob";
+import { EmlUploader } from "@/components/zkEmailProver";
+import { GenerateDevScore } from "@/utils/GenerateDevScore";
+import { CreateUser } from "@/writeContract/createUser";
 
 export const Home = () => {
     const { isLoggedIn, getWallets, readContractData, executeRawTransaction } = useOkto() as OktoContextType;
 
     const [walletAddr, setWalletAddr] = useState<string>("");
-    const [currentStep, setCurrentStep] = useState(0);
+    const [currentStep, setCurrentStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [linkedinData, setLinkedinData] = useState<any>(null);
     const [githubData, setGithubData] = useState<any>(null);
@@ -143,22 +145,36 @@ export const Home = () => {
             setLoading(true);
             try {
                 // Create the final profile object
-                const finalProfile = {
+                let finalProfile = {
                     ...formData,
                     linkedinProfile: linkedinData,
                     githubProfile: githubData
                 };
 
+                console.log("Profile w/o score is", finalProfile);
+
+                const _devScore = await GenerateDevScore(finalProfile);
+                console.log("Developer Score is", _devScore);
+
+                const _finalProfile = {
+                    ...formData,
+                    linkedinProfile: linkedinData,
+                    githubProfile: githubData,
+                    devScore: _devScore
+                };
+
+                console.log("Final Profile is", _finalProfile);
+
                 // Convert the profile data to a Blob/File
                 const profileBlob = new File(
-                    [JSON.stringify(finalProfile)],
+                    [JSON.stringify(_finalProfile)],
                     'profile.json',
                     { type: 'application/json' }
                 );
 
                 // Upload to Walrus
                 const walrusResponse = await uploadBlob(profileBlob);
-                console.log("Profile data stored on Walrus:", walrusResponse);
+                console.log("Profile data stored on Walrus:", _finalProfile);
 
                 // Add the Walrus reference to the profile data
                 const profileWithRef = {
@@ -167,6 +183,8 @@ export const Home = () => {
                     walrusSuiRef: walrusResponse.suiRef
                 };
 
+                const response = await CreateUser(walletAddr, profileWithRef.walrusRef, executeRawTransaction);
+                console.log("response from api", response);
                 console.log("Creating final profile with:", profileWithRef);
                 // TODO: Send profileWithRef to your backend/contract
                 alert("Builder Profile Created Successfully!");
@@ -271,7 +289,7 @@ export const Home = () => {
                                         
                                         <div className="space-y-2">
                                             <Label>Verify GitHub Ownership</Label>
-                                            <EmlUploader 
+                                            <EmlUploader
                                                 address={walletAddr} 
                                                 onVerificationSuccess={() => {
                                                     // Handle successful verification
